@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import './App.css';
 
 function generatePassword(length: number): string {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
@@ -20,6 +21,8 @@ export function App() {
     const [password, setPassword] = useState('');
     const [passwordLength, setPasswordLength] = useState<number>(12); // Default length
     const [showPassword, setShowPassword] = useState<boolean>(false); // State for showing/hiding password
+    const [isClicked, setIsClicked] = useState<boolean>(false); // State for button click animation
+    const [copiedMessageVisible, setCopiedMessageVisible] = useState(false); // State for showing copied message
 
     const handleGeneratePassword = () => {
         if (passwordLength >= 12) {
@@ -37,26 +40,36 @@ export function App() {
         setShowPassword(e.target.checked);
     };
 
+    const handleCopyClick = () => {
+        copyText(password);
+        setIsClicked(true);
+        setCopiedMessageVisible(true); // Show copied message
+        setTimeout(() => {
+            setIsClicked(false);
+            setCopiedMessageVisible(false); // Hide message after 3 seconds
+        }, 3000);
+    };
+
     return (
-        <div className="max-w-[1216px] h-[800px] mx-auto my-4 py-5 flex flex-col gap-5 bg-gray-700 rounded-2xl">
-            <h1 className="text-3xl font-bold text-red-400 text-center bg-black">Gerador de senha</h1>
+        <div className="max-w-[1216px] mx-auto h-[800px] my-12 py-5 flex flex-col gap-5 border-2 border-cyan-400 rounded-2xl">
+            <img src="logo.svg" alt="password generator" className="w-[600px] h-40 mx-auto block px-4 mt-20" />
             <div className="flex flex-col items-center">
-                <label htmlFor="password-length" className="text-white mb-2">Enter the length of the password:</label>
+                <label htmlFor="password-length" className="text-white mb-2">Número de caracteres da senha:</label>
                 <input
                     type="range"
                     id="password-length"
                     min="12"
-                    max="64"
+                    max="100"
                     value={passwordLength}
                     onChange={handleSliderChange}
-                    className="w-96 bg-gray-800"
+                    className="w-72 bg-gray-800"
                 />
                 <span className="text-white mt-2">{passwordLength}</span>
             </div>
-            <button onClick={handleGeneratePassword} className="mt-4 p-2 bg-blue-500 text-white rounded">RODAR</button>
+            <button onClick={handleGeneratePassword} className="mt-4 p-2 bg-sky-700 text-white rounded mx-auto w-48">RODAR</button>
             {password && (
                 <div id="textResponse" className="text-center mt-4 text-white">
-                    <p>Generated Password:</p>
+                    <p>Sua nova senha:</p>
                     <input
                         type={showPassword ? "text" : "password"}
                         value={password}
@@ -72,9 +85,14 @@ export function App() {
                             onChange={handleShowPasswordChange}
                         />
                     </div>
+                    {copiedMessageVisible && (
+                        <div className="text-green-600 mt-2">
+                            Senha copiada!
+                        </div>
+                    )}
                     <button
-                        className="mt-4 p-2 bg-blue-500 text-white rounded"
-                        onClick={() => copyText(password)}>
+                        className={`mt-4 p-2 bg-sky-700 text-white rounded ${isClicked ? 'clicked' : ''}`}
+                        onClick={handleCopyClick}>
                         Copiar Senha
                     </button>
                 </div>
