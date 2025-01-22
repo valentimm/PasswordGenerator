@@ -66,7 +66,7 @@ export function App() {
                 />
                 <span className="text-white mt-2">{passwordLength}</span>
             </div>
-            <button onClick={handleGeneratePassword} className="mt-4 p-2 bg-sky-700 text-white rounded mx-auto w-48">RODAR</button>
+            <button onClick={handleGeneratePassword} className="mt-4 p-2 bg-sky-700 text-white rounded mx-auto w-48">Gerar senha</button>
             {password && (
                 <div id="textResponse" className="text-center mt-4 text-white">
                     <p>Sua nova senha:</p>
